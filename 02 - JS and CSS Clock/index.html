@@ -62,12 +62,53 @@
       background: black;
       position: absolute;
       top: 50%;
+      transform: rotate(90deg);
+      transform-origin: 100%; /* by default it is the middle of an element - 50% */
+      transition: transform 1s;
+      transition-timing-function: cubic-bezier(0.1, 2, 1, 1); /* imitates mechanic clock hand moving */
     }
 
+    .temp {
+      transition: all 0s;
+    }
   </style>
 
   <script>
 
+    const hourHand = document.querySelector('.hour-hand');
+    const minHand = document.querySelector('.min-hand');
+    const secHand = document.querySelector('.second-hand');
+
+    function setDate(){
+
+      const date = new Date();
+      const hours = date.getHours();
+      const min = date.getMinutes();
+      const seconds = date.getSeconds();
+            
+      const secAngle = (360 * seconds / 60) + 90; // calculate the angle depending on time
+      const minAngle = (360 * min / 60) + 90; // calculate the angle depending on time
+      const hourAngle = (360 * hours / 12) + 95; // calculate the angle depending on time
+      
+     
+      hourHand.style.transform = `rotate(${hourAngle}deg)`;
+      minHand.style.transform = `rotate(${minAngle}deg)`;
+      secHand.style.transform = `rotate(${secAngle}deg)`;
+
+      if (seconds === 0) { // there is a glitch -> 90deg is also treated as 450deg so the hand transitions backwards
+        secHand.classList.add('temp'); // to prevent it I temporarily remove transition effect when on 90deg angle
+      } else if(seconds === 1){
+        secHand.classList.remove('temp');
+      }
+
+      if (min === 0) { // there is a glitch -> 90deg is also treated as 450deg so the hand transitions backwards
+        minHand.classList.add('temp'); // to prevent it I temporarily remove transition effect when on 90deg angle
+      } else if(min === 1){
+        minHand.classList.remove('temp');
+      }
+
+    }
+    setInterval(setDate, 1000); // set time every second
 
   </script>
 </body>
