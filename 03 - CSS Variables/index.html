@@ -22,10 +22,25 @@
 
   <style>
 
+    :root { /* declaring css custom properties is common best practice because it allows to apply them globally across the HTML document */
+      --base: #ffc600;
+      --blur: 15px;
+      --spacing: 50px; 
+    }
+
+    img {
+      padding: var(--spacing); /* using css custom properties */
+      background: var(--base); /* using css custom properties */
+      filter: blur(var(--blur)); /* using css custom properties */
+    }
+
+    .hl {
+      color: var(--base); /* using css custom properties */
+    }
     /*
       misc styles, nothing to do with CSS variables
     */
-
+    
     body {
       text-align: center;
       background: #193549;
@@ -42,9 +57,25 @@
     input {
       width: 100px;
     }
+
+
   </style>
 
   <script>
+    // Let's update css custom properties values through js
+
+    const inputs = document.querySelectorAll('.controls input'); // nodeList with all the inputs
+    //console.log(inputs);
+
+    function updateVars(){ 
+      const sizing = this.dataset.sizing || ''; // for the style properties that need some suffix like 'px' wes has hidden them in data-sizing attr. 
+      
+      document.documentElement.style.setProperty(`--${this.name}`, this.value + sizing); //document.documentElement is the root element, where css variables(custom properties) are declared
+
+    }
+
+     inputs.forEach(input => input.addEventListener('change', updateVars)); // walking through the inputs and listening for the change event which is handled by updateVars function
+     inputs.forEach(input => input.addEventListener('mousemove', updateVars)); // also call updateVars fn on mousemove so that we don't have to wait for the change event to fire
   </script>
 
 </body>
