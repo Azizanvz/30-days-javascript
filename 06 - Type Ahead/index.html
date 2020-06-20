@@ -17,6 +17,42 @@
 <script>
 const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
 
+const cities = [];
+
+fetch(endpoint) // method fetch() is provided by Fetch API to fetch resources asynchronously across the network. Here is the simplest use - takes one argument - endpoint 
+  .then(response => response.json() //returns a promise containing the response (Response object), which is not json, so we use .json() 
+  .then(data => cities.push(...data))); // which returns a promise that resolves with parsing the body text as JSON
+
+function findMatches(wordToMatch, cities) {
+  return cities.filter((place) => { // walking through the cities array
+    const regex = new RegExp(wordToMatch, 'gi'); // gi modifier is used for a global case insesitive match
+    return place.city.match(regex) || place.state.match(regex); // return cities or states that contain the argument 'wordToMatch'
+  })
+}
+
+const suggestions = document.querySelector('.suggestions');
+
+function displayMatches() { // is called on 'change' and 'keyup' event 
+  const matches = findMatches(this.value, cities); // let's call findMatches fn with the input value
+  const html = matches.map((place) => { 
+    const regex = new RegExp(this.value, 'gi'); // we use regex to hl the part that has been searched for
+    const cityName = place.city.replace(regex, `<span class="hl">${this.value}</span>`); // the we replace it with highlighted verison
+    const stateName = place.state.replace(regex, `<span class="hl">${this.value}</span>`); // the we replace it with highlighted verison
+
+    return `
+      <li>
+        <span class="name">${cityName}, ${stateName}</span>
+        <span class="population">${place.population}</span>
+      </li>
+    `;
+  }).join(''); // map() returns an array, so we use .join('') to convert it to a string
+  suggestions.innerHTML = html; // we put it into suggestions ul
+}
+
+const input = document.querySelector('.search');
+input.addEventListener('change', displayMatches);
+input.addEventListener('keyup', displayMatches);
+
 </script>
 </body>
 </html>
