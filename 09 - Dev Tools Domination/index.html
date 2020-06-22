@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Console Tricks!</title>
+</head>
+<body>
+
+  <p onClick="makeGreen()">×BREAK×DOWN×</p>
+
+  <script>
+    const dogs = [{ name: 'Snickers', age: 2 }, { name: 'hugo', age: 8 }];
+
+    function makeGreen() {
+      const p = document.querySelector('p');
+      p.style.color = '#BADA55';
+      p.style.fontSize = '50px';
+    }
+
+    // Regular
+
+    console.log("Hello, world!")
+
+    // Interpolated
+    const v = 'world';
+    console.log(`Hello, ${v}!`);
+    console.log('My name is %s', 'Aziza');
+
+    // Styled
+
+    //console.log('%c I am some great text', 'font-size:50px; background:red')
+    // warning!
+    
+    console.warn('Warning!'); // Outputs a warning message to the Web Console.
+
+    // Error :|
+
+    console.error('Error here!'); //Outputs an error message to the Web Console
+
+    // Info
+
+    console.info('Some info here'); //outputs an informational message to the Web Console. In Firefox, a small "i" icon is displayed next to these items in the Web Console's log.
+
+
+    // Testing
+
+    const p = document.querySelector('p');
+    console.assert( p.classList.contains('nopeitdoesnt'), 'It doesnt'); //writes an error message to the console if the assertion is false. If it is true, nothing happens.
+
+    console.assert( 1 === 1, 'It doesnt');//If it is true, nothing happens
+
+    // clearing
+
+    console.clear(); //clears the console if the environment allows it
+
+    // Viewing DOM Elements
+
+    console.log(p);
+    console.dir(p); // displays an interactive list of the properties of the specified JavaScript object. 
+
+    // Grouping together
+
+    dogs.forEach(dog => {
+      console.groupCollapsed(dog.name); //Creates a new inline group in the Web Console. Unlike console.group(), however, the new group is created collapsed.
+      console.log(`His name is ${dog.name}`);
+      console.log(`His age is ${dog.age}`);
+      console.log(`${dog.name} is ${dog.age} years old`);
+      console.groupEnd(); //Exits the current inline group in the Web Console.
+    })
+
+    // counting
+
+    console.count('Aziza'); //logs the number of times that this particular call to count() has been called.
+    console.count('Aziza');
+    console.count('zzzzz');
+    console.count('Aziza');
+    console.count('zzzzz');
+    console.count('zzzzz');
+    console.count('Aziza');
+    
+    // timing
+
+    console.time('fetching data'); //Starts a timer you can use to track how long an operation takes.
+    fetch('https://api.github.com/users/azizanvz')
+      .then(data => data.json())
+      .then(data => {
+        console.timeEnd('fetching data'); //When you call console.timeEnd() with the same name as console.time(), the browser will output the time, in milliseconds, that elapsed since the timer was started.
+        console.log(data);
+      });
+    
+    console.table(dogs) //Displays tabular data as a table.
+
+  </script>
+</body>
+</html>
