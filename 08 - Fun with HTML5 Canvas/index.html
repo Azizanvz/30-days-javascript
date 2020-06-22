@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+</head>
+<body>
+<canvas id="draw" width="800" height="800"></canvas>
+
+<script>
+
+  const canvas = document.querySelector('#draw'); 
+  const ctx = canvas.getContext('2d'); //drawing happens not directly on canvas, but on the context
+
+  canvas.width = window.innerWidth; // the interior width of the window in pixels, includes vertical scrollbar's width
+  canvas.height = window.innerHeight; // the interior height of the window in pixels, includes horizontal scrollbar's heigth
+
+  ctx.strokeStyle = '#BADA55'; //specifies the color, gradient, or pattern to use for the strokes (outlines) around shapes
+  ctx.lineJoin = 'round'; //the shape used to join two line segments where they meet
+  ctx.lineCap = 'round'; //determines the shape used to draw the end points of lines
+  ctx.lineWidth = 1; // thickness of lines
+
+  let isDrawing = false; //flag for drawing
+  let lastX = 0;
+  let lastY = 0;
+  let hue = 0;
+  let direction = true;
+
+  function draw(e){
+    if (!isDrawing) return;
+    ctx.strokeStyle=`hsl(${hue}, 100%, 50%)`; // we use hsl format to change hue(0-360) 
+    ctx.beginPath(); //starts a new path 
+    ctx.moveTo(lastX, lastY);//moves the path to the specified point in the canvas, without creating a line
+    ctx.lineTo(e.offsetX, e.offsetY);//adds a straight line to the current sub-path by connecting the sub-path's last point to the specified (x, y) coordinates.
+    ctx.stroke(); //does the actual drawing
+    [lastX, lastY] = [e.offsetX, e.offsetY]; // set lastX, lastY to save the current coordinates of mouse
+    hue++; // we are changing color for every mousemove using hue in hsl
+    if (ctx.lineWidth >=100 || ctx.lineWidth <= 1){
+      direction = !direction; // reset from up to down and otherwise
+    }
+
+    if (direction) { // increasing line thickness until 100, then decreasing till 1 
+      ctx.lineWidth++;
+    }else {
+      ctx.lineWidth--;
+    }
+    console.log(e);
+  }
+
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mousedown', (e) => {
+    isDrawing = true; 
+    [lastX, lastY] = [e.offsetX, e.offsetY]; // so that instead of starting from (0, 0) we start from where we press the mouse down
+    });
+  canvas.addEventListener('mouseup', () => isDrawing = false);
+  canvas.addEventListener('mouseout', () => isDrawing = false);
+
+</script>
+
+<style>
+  html, body {
+    margin: 0;
+  }
+
+  
+</style>
+
+</body>
+</html>
